@@ -74,7 +74,6 @@ from .utils import (
     _geoserver_down_error_msg,
     _get_time_dimensions,
     check_import_session_is_valid,
-    is_async_step,
     is_latitude,
     is_longitude,
     json_response,

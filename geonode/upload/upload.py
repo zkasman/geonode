@@ -49,7 +49,6 @@ from django.conf import settings
 from django.db.models import Max
 from django.db import transaction
 from django.db.utils import IntegrityError
-from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from geonode import GeoNodeException
@@ -62,7 +61,6 @@ from geonode.upload.api.exceptions import GeneralUploadException
 
 from ..layers.models import Dataset
 from ..layers.metadata import parse_metadata
-from ..people.utils import get_default_user
 from ..layers.utils import get_valid_dataset_name, is_vector
 from ..geoserver.helpers import (
     gs_catalog,
@@ -376,6 +374,7 @@ def save_step(user, layer, spatial_files, overwrite=True, store_spatial_files=Tr
             else:
                 _log("The File [%s] has been sent to GeoServer without errors.", name, level="debug")
             return import_session, upload
+
 
 def csv_step(upload_session, lat_field, lng_field):
     import_session = upload_session.import_session
