@@ -182,8 +182,8 @@ def get_kml_doc(kml_bytes):
 # note 'run' is not a "real" step, but handled as a special case
 # and 'save' is the implied first step :P
 _pages = {
-    'shp': ('srs', 'check', 'time', 'run', 'final'),
-    'csv': ('csv', 'srs', 'check', 'time', 'run', 'final'),
+    'shp': ('srs', 'check', 'run', 'final'),
+    'csv': ('csv', 'srs', 'check', 'run', 'final'),
     'tif': ('srs', 'run', 'final'),
     'zip-mosaic': ('run', 'final'),
     'asc': ('run', 'final'),
@@ -209,13 +209,6 @@ _pages = {
 _latitude_names = {'latitude', 'lat'}
 _longitude_names = {'longitude', 'lon', 'lng', 'long'}
 
-
-if not _ALLOW_TIME_STEP:
-    for t, steps in _pages.items():
-        steps = list(steps)
-        if 'time' in steps:
-            steps.remove('time')
-        _pages[t] = tuple(steps)
 
 if not _ALLOW_MOSAIC_STEP:
     for t, steps in _pages.items():

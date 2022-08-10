@@ -84,7 +84,6 @@ from .utils import (
 from .upload import (
     save_step,
     srs_step,
-    time_step,
     csv_step,
     final_step,
     LayerNotReady,
@@ -446,91 +445,6 @@ def create_time_form(request, upload_session, form_data):
     return TimeForm(**args)
 
 
-def time_step_view(request, upload_session):
-    if not upload_session:
-        upload_session = _get_upload_session(request)
-    import_session = upload_session.import_session
-    assert import_session is not None
-
-    force_ajax = '&force_ajax=true' if request and 'force_ajax' in request.GET and request.GET['force_ajax'] == 'true' else ''
-    if request.method == 'GET':
-        layer = check_import_session_is_valid(
-            request, upload_session, import_session)
-        if layer:
-            (has_time_dim, dataset_values) = dataset_eligible_for_time_dimension(request, layer, upload_session=upload_session)
-            if has_time_dim and dataset_values:
-                upload_session.completed_step = 'check'
-                if not force_ajax:
-                    context = {
-                        'time_form': create_time_form(request, upload_session, None),
-                        'dataset_name': layer.name,
-                        'dataset_values': dataset_values,
-                        'dataset_attributes': list(dataset_values[0].keys()),
-                        'async_upload': is_async_step(upload_session)
-                    }
-                    return render(request, 'upload/dataset_upload_time.html', context=context)
-            else:
-                upload_session.completed_step = 'time' if _ALLOW_TIME_STEP else 'check'
-        return next_step_response(request, upload_session)
-    elif request.method != 'POST':
-        raise Exception()
-
-    form = create_time_form(request, upload_session, request.POST)
-    if not form.is_valid():
-        logger.exception('Invalid upload form: %s', form.errors)
-        raise GeneralUploadException(detail="Invalid Submission")
-
-    cleaned = form.cleaned_data
-    start_attribute_and_type = cleaned.get('start_attribute', None)
-    if upload_session.time_transforms:
-        upload_session.import_session.tasks[0].remove_transforms(
-            upload_session.time_transforms,
-            save=True
-        )
-        upload_session.import_session.tasks[0].save_transforms()
-        upload_session.time_transforms = None
-
-    if upload_session.import_session.tasks[0].transforms:
-        for transform in upload_session.import_session.tasks[0].transforms:
-            if 'type' in transform and \
-                    (str(transform['type']) == 'DateFormatTransform' or
-                     str(transform['type']) == 'CreateIndexTransform'):
-                upload_session.import_session.tasks[0].remove_transforms(
-                    [transform],
-                    save=True
-                )
-                upload_session.import_session.tasks[0].save_transforms()
-
-    try:
-        upload_session.import_session = import_session.reload()
-    except gsimporter.api.NotFound as e:
-        logger.exception(e)
-        Upload.objects.invalidate_from_session(upload_session)
-        raise GeneralUploadException(detail=_("The GeoServer Import Session is no more available ") + str(e))
-
-    if start_attribute_and_type:
-        def tx(type_name):
-            # return None if type_name is None or type_name == 'Date' \
-            return None if type_name is None \
-                else 'DateFormatTransform'
-        end_attribute, end_type = cleaned.get('end_attribute', (None, None))
-        time_step(
-            upload_session,
-            time_attribute=start_attribute_and_type[0],
-            time_transform_type=tx(start_attribute_and_type[1]),
-            time_format=cleaned.get('attribute_format', None),
-            end_time_attribute=end_attribute,
-            end_time_transform_type=tx(end_type),
-            end_time_format=cleaned.get('end_attribute_format', None),
-            presentation_strategy=cleaned['presentation_strategy'],
-            precision_value=cleaned['precision_value'],
-            precision_step=cleaned['precision_step'],
-        )
-
-    upload_session.completed_step = 'check'
-    return next_step_response(request, upload_session)
-
-
 def final_step_view(req, upload_session):
     _json_response = None
     if not upload_session:
@@ -625,7 +539,6 @@ _steps = {
     'srs': srs_step_view,
     'csv': csv_step_view,
     'check': check_step_view,
-    'time': time_step_view,
     'final': final_step_view
 }
 
