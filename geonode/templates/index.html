@@ -87,7 +87,7 @@
 
   {% block mainbody %}
 
-      {% block bigsearch %}
+      <!-- {% block bigsearch %}
       {% if block.super %}
       {{ block.super }}
       {% else %}
@@ -114,9 +114,9 @@
       	</div>
       </div>
       {% endif %}
-      {% endblock bigsearch %}
+      {% endblock bigsearch %} -->
 
-	  {% block showcase %}
+	  <!-- {% block showcase %}
       <section id="showcase">
         <div class="row">
           <div class="container text-center">
@@ -164,19 +164,20 @@
           </div>
         </div>
       </section>
-	  {% endblock showcase %}
+	  {% endblock showcase %} -->
+
 
 	  {% block datasets %}
     <section id="datasets">
       {% get_visibile_resources request.user %}
       <div ng-app="featured" ng-if="featured.length > 0" ng-cloak class="row">
           <div class="container text-center">
-            <h2>{% trans "Featured Datasets" %}</h2>
+            <!-- <h2>{% trans "Featured Datasets" %}</h2> -->
             <div class="row">
                 {% verbatim %}
-                <div ng-repeat="item in featured" class="col-xs-6 col-sm-6 col-md-3">
+                <div ng-repeat="item in featured" class="col-xs-6 col-sm-6 col-md-4 col-lg-4 col-xl-4">
                   <a href="{{ item.detail_url }}"><img ng-src="{{ item.thumbnail_url }}" style="width: 100%" /></a>
-                  <h4>{{ item.title | limitTo: 20 }}{{item.title.length > 20 ? '...' : ''}}</h4>
+                  <h4>{{ item.title | limitTo: 50 }}{{item.title.length > 50 ? '...' : ''}}</h4>
                 </div>
                 {% endverbatim %}
             </div>

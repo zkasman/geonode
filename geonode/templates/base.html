@@ -39,9 +39,9 @@
     <link href="{% static "lib/css/ol.css" %}" rel="stylesheet" />
     <script src="{% static "lib/js/ol.js" %}"></script>
     <link rel="preload" as="style" href="{% static "geonode/css/font-awesome.min.css" %}" />
-    <link rel="preload" as="font" href="{% static "geonode/fonts/lato_regular.ttf" %}" crossorigin="" />
-    <link rel="preload" as="font" href="{% static "geonode/fonts/lato_bold.ttf" %}" crossorigin="" />
-    <link rel="preload" as="font" href="{% static "geonode/fonts/lato_light.ttf" %}" crossorigin="" />
+    <link rel="preload" as="font" href="{% static "geonode/fonts/Poppins-SemiBold.ttf" %}" crossorigin="" />
+    <link rel="preload" as="font" href="{% static "geonode/fonts/Poppins-Regular.ttf" %}" crossorigin="" />
+    <link rel="preload" as="font" href="{% static "geonode/fonts/Poppins-Light.ttf" %}" crossorigin="" />
 
     {% block head %}
 
@@ -162,7 +162,7 @@
           color: {{ custom_theme.jumbotron_text_color }};
           font-weight: normal;
           font-size: xx-large;
-          font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+          font-family: 'Poppins', sans-serif;
         }
         {% endif %}
 
@@ -392,9 +392,9 @@
                 </form>
               </div>
             </li>
-            {% if not user.is_authenticated and ACCOUNT_OPEN_SIGNUP and not READ_ONLY_MODE %}
+            <!-- {% if not user.is_authenticated and ACCOUNT_OPEN_SIGNUP and not READ_ONLY_MODE %}
               <li><a href="{% url "account_signup" %}">{% trans "Register" %}</a></li>
-            {% endif %}
+            {% endif %} -->
             {% if user.is_authenticated %}
             <li>
               <a href="#" class="dropdown-toggle avatar" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -426,8 +426,8 @@
                     <li><a href="{% url "monitoring:index" %}">{% trans "Monitoring & Analytics" %}</a></li>
                     {% endif %}
                 {% endif %}
-                <li role="separator" class="divider"></li>
-                <li><a href="{% url "help" %}">{% trans "Help" %}</a></li>
+                <!-- <li role="separator" class="divider"></li> -->
+                <!-- <li><a href="{% url "help" %}">{% trans "Help" %}</a></li> -->
                 <li role="separator" class="divider"></li>
                 <li><a href="{% if SITEURL|default:""|slice:"-1:" == "/" %}{{SITEURL}}{% else %}{{SITEURL}}/{% endif %}account/logout/">{% trans "Log out" %}</a></li>
                 </ul>
@@ -479,7 +479,7 @@
   <footer>
     <div class="container">
       <div class="row">
-        <div class="col-md-2">
+        <!-- <div class="col-md-2">
           <ul class="list-unstyled">
             <li>{% trans "Data" %}</li>
             <li><a href="{% url "layer_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% trans "Layers" %}</a></li>
@@ -525,30 +525,25 @@
             <li><a href="{% url "group_create" %}">{% trans "Create Group" %}</a></li>
             {% endif %}
           </ul>
+        </div> -->
+
+        <div class="col-md-6 text-left">
+          <ul class="list-unstyled">
+            <li><a href="http://jpbd.johor.gov.my/">PLANMalaysia@Johor</a></li>
+            <li><small>(Jabatan Perancangan Bandar Dan Desa Negeri Johor)</small></li>
+            <li><small>Tingkat 1 & 2, Bangunan Dato' Mohamad Salleh Perang,</small></li>
+            <li><small>79646, Kota Iskandar, Iskandar Puteri, Johor</small></li>
+            <br>
+            <li><small>Tel:  07-266 7200/ 07-266 7201 | Faks: 07-266 1402</small></li>
+            <li><small>Emel: jpbd at johor dot gov dot my</small></li>
+          </ul>
         </div>
 
         <div class="col-md-6 text-right">
-          {% block contactus %}
-          {% if custom_theme.contactus %}
           <ul class="list-unstyled">
-              <li style="text-align: left;"><h2 style="margin-top: 0px;">{% trans "Contact Us" %} </h2> </li>
-              {% if custom_theme.contact_name %}<li style="text-align: left;">{{ custom_theme.contact_name }}</li>{% endif %}
-              {% if custom_theme.contact_position %}<li style="text-align: left;">{{ custom_theme.contact_position }}</li>{% endif %}
-              {% if custom_theme.contact_administrative_area %}<li style="text-align: left;">{{ custom_theme.contact_administrative_area }}</li>{% endif %}
-              {% if custom_theme.contact_city %}<li style="text-align: left;">{{ custom_theme.contact_city }}</li>{% endif %}
-              {% if custom_theme.contact_street %}<li style="text-align: left;">{{ custom_theme.contact_street }}</li>{% endif %}
-              {% if custom_theme.contact_postal_code %}<li style="text-align: left;">{{ custom_theme.contact_postal_code }}</li>{% endif %}
-              {% if custom_theme.contact_country %}<li style="text-align: left;">{{ custom_theme.contact_country }}</li>{% endif %}
-              {% if custom_theme.contact_delivery_point %}<li style="text-align: left;">{{ custom_theme.contact_delivery_point }}</li>{% endif %}
-              {% if custom_theme.contact_voice %}<li style="text-align: left;">{% trans "Tel" %}: {{ custom_theme.contact_voice }}</li>{% endif %}
-              {% if custom_theme.contact_facsimile %}<li style="text-align: left;">{% trans "Fax" %}: {{ custom_theme.contact_facsimile }}</li>{% endif %}
-              {% if custom_theme.contact_email %}<li style="text-align: left;">{% trans "E-mail" %}: {{ custom_theme.contact_email }}</li>{% endif %}
-          </ul>
-          {% endif %}
-          {% endblock contactus %}
-          <ul class="list-unstyled">
-            <li>{% trans "Powered by" %} <a href="http://geonode.org">{% trans "GeoNode" %}</a>{% if user.is_staff %} <em>{% trans "version" %} {{ VERSION }}</em>{% endif %}</li>
-            <li><a href="{% url "developer" %}">{% trans "Developers" %}</a> | <a href="{% url "about" %}">{% trans "About" %}</a><li>
+            <li><small>GeoJohor - Versi 2022.1.0</small></li>
+            <li>Hakcipta Terpelihara PLANMalaysia@Johor © 2022</li>
+            <!-- <li><a href="{% url "developer" %}">{% trans "Developers" %}</a> | <a href="{% url "about" %}">{% trans "About" %}</a><li> -->
           </ul>
           <label class="hidden">{% trans "Language" %}</label>
           {% if csrf_token != "NOTPROVIDED" %}
